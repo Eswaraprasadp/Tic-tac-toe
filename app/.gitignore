@@ -1,2 +1,3 @@
 /build
-!bulid/outputs/apk
+/bulid/outputs
+!build/outputs/apk

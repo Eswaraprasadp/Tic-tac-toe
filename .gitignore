@@ -10,4 +10,4 @@
 .externalNativeBuild
 /build
 
-!build/outputs
+!build/outputs/apk

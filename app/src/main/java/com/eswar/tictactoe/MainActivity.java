@@ -1,5 +1,8 @@
 package com.eswar.tictactoe;
 
+import android.app.Application;
+import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Layout;
@@ -13,39 +16,34 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.List;
+import java.util.TimeZone;
 
-public class MainActivity extends AppCompatActivity {
-    private LinearLayout table;
+public class MainActivity extends BaseActivity{
     private Button resetButton;
     private TextView resultText;
     private int[][] grids = new int[3][3];
     Button gridButtons[][] = new Button[3][3];
-    DisplayMetrics metrics;
-    int height, width;
-    private int result;
+    private int result, noOfMoves;
     private final static int AI_LOST = -1, DRAW = 1, AI_WIN = 2, NO_RESULT = 0;
     boolean waitFlag = false, gameOver = false;
-    boolean aiMove = false;
-    AI ai;
+    boolean aiMove = false, firstTime = true;
+    private AI ai;
     private int difficulty;
     private final static int EASY = 0, MEDIUM = 1, DIFFICULT = 2;
+    private final static long MAX = Long.MAX_VALUE;
     private final static String tag = "tag";
+    private long startTime = (long)0, elapsedTime = (long)0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         difficulty = getIntent().getIntExtra("Difficulty", 2);
-
-        Log.d(tag, "Difficulty selected is : " + String.valueOf(difficulty));
-
-//        metrics = new DisplayMetrics();
-//        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-//        height = metrics.heightPixels;
-//        width = metrics.widthPixels;
-
-        table = (LinearLayout)findViewById(R.id.llTable);
 
         resetButton = (Button)findViewById(R.id.btnReset);
         resultText = (TextView)findViewById(R.id.tvResult);
@@ -56,51 +54,66 @@ public class MainActivity extends AppCompatActivity {
         init();
     }
     private void init(){
-        Log.d(tag, "Inside init()");
         resultText.setVisibility(View.INVISIBLE);
         for (int i = 0; i < 3; ++i){
             for (int j = 0; j < 3; ++j){
-//                String text = "";
-//                if(grids[i][j] == 1){
-//                    text = "X";
-//                }
-//                else if(grids[i][j] == 5){
-//                    text = "O";
-//                }
                 grids[i][j] = 0;
                 gridButtons[i][j].setText("");
             }
         }
         gameOver = false;
         result = NO_RESULT;
+        noOfMoves = 0;
         aiMove = false;
         waitFlag = false;
-//        for (int i = 0; i < 3; ++i){
-//            for (int j = 0; j < 3; ++j){
-//                grids[0][0] = 0;
-//            }
-//        }
+        firstTime = true;
+
         resetButton.setText(R.string.reset);
 
-        Log.d(tag, "About to initialize ai");
         ai = new AI(grids, difficulty);
+
+        startTime = (long)0;
+        elapsedTime = (long)0;
 //        callAI();
 
     }
+    private void ending(){
+        elapsedTime = System.currentTimeMillis() - startTime;
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+        sdf.setTimeZone(TimeZone.getDefault());
+        String date = sdf.format(Calendar.getInstance().getTime());
+//        Log.d(tag, "In MainActivity, elapsed time = " + String.valueOf(elapsedTime) + ", date = " + date + ", number of moves = " + String.valueOf(noOfMoves));
+
+        resultText.setVisibility(View.VISIBLE);
+        resetButton.setText(R.string.play_again);
+
+        try {
+            myDbh.add(new Row(difficulty, elapsedTime, date, result, noOfMoves));
+//            Log.d(tag, "A new row added in MainActivity");
+        }
+        catch (Exception e){
+//            Log.d(tag, "Exception in adding new row");
+        }
+        long bestTime = sharedPref.getLong("time " + AI.getDifficultyString(difficulty), MAX);
+        if((elapsedTime < bestTime) && (result == AI.AI_LOST)) {
+            sharedPref.edit().putLong(bestTimeKey(difficulty), elapsedTime).apply();
+//            Log.d(tag, "Best time for difficulty " + AI.getDifficultyString(difficulty) + " changed");
+        }
+
+    }
     private void callAI(){
-        Log.d(tag, "Inside callAI");
             if(aiMove) {
                 try {
 //                    ai.printBoard(grids);
-                    int choice = ai.getMove(grids);;
-//                    Log.d(tag, "After calling ai.getMove(), grids is ");
-//                    ai.printBoard(grids);
-                    Log.d(tag, "AI's  choice is  : " + String.valueOf(choice));
+                    int choice = ai.getMove(grids);
+
+//                    Log.d(tag, "AI's  choice is  : " + String.valueOf(choice));
                     int[] rowCol = findRowCol(choice);
                     int row = rowCol[0], col = rowCol[1];
+                    waitFlag = false;
                     try {
                         gridButtons[row][col].callOnClick();
-                        Log.d(tag, "gridButtons[" + String.valueOf(row) + "][" + String.valueOf(col) + "] callOnClick performed");
                     } catch (ArrayIndexOutOfBoundsException aiobe) {
                         Log.d(tag, "Array Out of Bounds Exception in callAI()");
                     } catch (Exception e) {
@@ -117,60 +130,78 @@ public class MainActivity extends AppCompatActivity {
     View.OnClickListener select = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if(!waitFlag && !gameOver) {
-                Log.d(tag, "Inside onClick");
+
+            int tagButton = Integer.parseInt(v.getTag().toString());
+            int[] rowCol = findRowCol(tagButton);
+            int row = rowCol[0], col = rowCol[1];
+
+            boolean valid = false;
+
+            if(grids[row][col] == 0){
+                valid = true;
+            }
+
+            if(!waitFlag && !gameOver && valid) {
+
                 waitFlag = true;
-                int tagButton = Integer.parseInt(v.getTag().toString());
-                Log.d(tag, "tag of button is " + tagButton);
-                int[] rowCol = findRowCol(tagButton);
-                int row = rowCol[0], col = rowCol[1];
-                Log.d("tag", "Row : " + String.valueOf(row) + ", Column : " + String.valueOf(col));
+
                 if (!aiMove) {
                     gridButtons[row][col].setText("X");
+                    ++noOfMoves;
                     grids[row][col] = 1;
-//                    Log.d(tag, "Grids and GridButtons set for move done by player");
-                }
-                else{
+                } else {
                     gridButtons[row][col].setText("O");
                     grids[row][col] = 5;
-//                    Log.d(tag, "Grids and GridButtons set for move done by AI");
                 }
-                aiMove = !aiMove;
+
+                if(firstTime){
+                    startTime = System.currentTimeMillis();
+                    firstTime = false;
+                }
                 try {
-//                    Log.d(tag, "Finding results for " + Arrays.deepToString(grids) + " in MainActivity");
+//                Log.d(tag, "Finding results for " + Arrays.deepToString(grids) + " in MainActivity");
                     result = ai.findResult(grids);
-                    if(result == AI_LOST){
+                    if (result == AI_LOST) {
                         gameOver = true;
+                        resultText.setTextColor(getResources().getColor(R.color.perfectGreen));
                         resultText.setText(R.string.win);
-                    }
-                    else if(result == AI_WIN){
+                    } else if (result == AI_WIN) {
                         gameOver = true;
+                        resultText.setTextColor(getResources().getColor(R.color.colorAccent));
                         resultText.setText(R.string.lost);
-                    }
-                    else if(result == DRAW){
+                    } else if (result == DRAW) {
                         gameOver = true;
+                        resultText.setTextColor(getResources().getColor(R.color.orange));
                         resultText.setText(R.string.draw);
                     }
-                }
-                catch (Exception e){
+                } catch (Exception e) {
                     Log.d(tag, "Error in calling ai.findResult()");
                 }
-                if(!gameOver){
-                    waitFlag = false;
-                    if(aiMove) {
+
+                if (!gameOver) {
+
+                    if(aiMove){
+                        aiMove = false;
+                        waitFlag = false;
+                    }
+                    else{
+                        aiMove = true;
+                    }
+
+                    if (aiMove) {
                         try {
                             callAI();
-                        }
-                        catch (Exception e) {
+                        } catch (Exception e) {
                             Log.d(tag, "Exception in calling callAI(): " + e.toString());
                         }
                     }
                 }
-                else{
-                    waitFlag = true;
-                    resultText.setVisibility(View.VISIBLE);
-                    resetButton.setText(R.string.play_again);
+                else {
+                    ending();
                 }
+            }
+            else{
+                Log.d(tag, "Does not go to setting text, waitFlag = " + String.valueOf(waitFlag) + ", gameOver = " + String.valueOf(gameOver) + ", valid = " + String.valueOf(valid));
             }
         }
     };
@@ -184,6 +215,8 @@ public class MainActivity extends AppCompatActivity {
 
             gridButtons[row][col].setText("O");
             grids[row][col] = 5;
+
+            aiMove = false;
         }
     };
 
@@ -212,11 +245,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        Log.d(tag, "Inside initBoard()");
     }
-    int pxFromDp(float dp) {
-        return (int)(dp * metrics.densityDpi / 160f) ;
-    }
+
     private int[] findRowCol(int index){
         int row = (int)(index/3);
         int col = index % 3;

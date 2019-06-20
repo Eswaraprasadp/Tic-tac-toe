@@ -6,47 +6,58 @@
     android:layout_height="match_parent"
     tools:context=".StartActivity"
     android:orientation="vertical"
-    android:gravity="center"
     android:background="@color/black">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_weight="1">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tic_tac_toe"
+        android:textSize="40sp"
+        android:textColor="@color/lightOrange"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_weight="5">
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/btnPlay"
+        android:background="@drawable/capsule_button_green"
+        android:text="@string/play"
+        android:textColor="@color/black"
         android:textSize="30sp"
-        android:id="@+id/btnEasy"
-        android:text="Easy"
         android:textAllCaps="false"
-        android:textColor="@color/perfectGreen"
-        android:background="#7B9095"
-        android:layout_marginBottom="10dp"
-        android:paddingLeft= "5dp"
-        android:paddingRight = "5dp"/>
+        android:layout_marginBottom="30dp"
+        />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:id="@+id/btnMedium"
-        android:background="#7B9095"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:text="Medium"
-        android:textAllCaps="false"
-        android:textColor="@color/perfectGreen"
-        android:textSize="30sp" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/btnViewHistory"
+        android:text="@string/view_history"
+        android:textColor="@color/black"
         android:textSize="30sp"
-        android:id="@+id/btnHard"
-        android:text="Hard"
         android:textAllCaps="false"
-        android:textColor="@color/perfectGreen"
-        android:background="#7B9095"
-        android:layout_marginTop="10dp"
-        android:paddingLeft= "5dp"
-        android:paddingRight= "5dp"/>
+        android:background="@drawable/capsule_button_purple"
+        android:layout_marginTop="30dp"
+        />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="1">
+
+    </LinearLayout>
 
 </LinearLayout>

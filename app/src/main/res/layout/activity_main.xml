@@ -29,6 +29,7 @@
                 android:id="@+id/grid11"
                 android:text="X"
                 android:textSize="40sp"
+                android:background="@drawable/grid"
                 android:tag="0"/>
             <Button
                 android:layout_width="90dp"
@@ -36,6 +37,7 @@
                 android:id="@+id/grid12"
                 android:text="X"
                 android:textSize="40sp"
+                android:background="@drawable/grid"
                 android:tag="1"/>
             <Button
                 android:layout_width="90dp"
@@ -43,6 +45,7 @@
                 android:id="@+id/grid13"
                 android:text="X"
                 android:textSize="40sp"
+                android:background="@drawable/grid"
                 android:tag="2"/>
         </LinearLayout>
         <LinearLayout
@@ -55,6 +58,7 @@
                 android:id="@+id/grid21"
                 android:text="X"
                 android:textSize="40sp"
+                android:background="@drawable/grid"
                 android:tag="3"/>
             <Button
                 android:layout_width="90dp"
@@ -62,6 +66,7 @@
                 android:id="@+id/grid22"
                 android:text="X"
                 android:textSize="40sp"
+                android:background="@drawable/grid"
                 android:tag="4"/>
             <Button
                 android:layout_width="90dp"
@@ -69,6 +74,7 @@
                 android:id="@+id/grid23"
                 android:text="X"
                 android:textSize="40sp"
+                android:background="@drawable/grid"
                 android:tag="5"/>
         </LinearLayout>
         <LinearLayout
@@ -81,6 +87,7 @@
                 android:id="@+id/grid31"
                 android:text="X"
                 android:textSize="40sp"
+                android:background="@drawable/grid"
                 android:tag="6"/>
             <Button
                 android:layout_width="90dp"
@@ -88,6 +95,7 @@
                 android:id="@+id/grid32"
                 android:text="X"
                 android:textSize="40sp"
+                android:background="@drawable/grid"
                 android:tag="7"/>
             <Button
                 android:layout_width="90dp"
@@ -95,6 +103,7 @@
                 android:id="@+id/grid33"
                 android:text="X"
                 android:textSize="40sp"
+                android:background="@drawable/grid"
                 android:tag="8"/>
         </LinearLayout>
     </LinearLayout>
@@ -114,10 +123,11 @@
         android:id="@+id/btnReset"
         android:text="@string/reset"
         android:textAllCaps="false"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="22dp"
         android:textSize="30sp"
-        android:background="#7B9095"
-        android:textColor="@color/perfectGreen"
+        android:background="@drawable/capsule_button_green"
+        android:textColor="@color/black"
+
         />
 
     </LinearLayout>

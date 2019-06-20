@@ -1,9 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LevelActivity">
+    tools:context=".LevelActivity"
+    android:orientation="vertical"
+    android:background="@color/black"
+    android:gravity="center_horizontal">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/play"
+        android:textSize="30sp"
+        android:textColor="@color/perfectGreen"
+        android:layout_marginTop="25dp"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/select_difficulty"
+        android:textSize="30sp"
+        android:textColor="@color/yellow"
+        android:layout_marginTop="15dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:id="@+id/btnEasy"
+        android:text="Easy"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        android:background="@drawable/capsule_button_green"
+        android:layout_marginBottom="15dp"
 
-</android.support.constraint.ConstraintLayout>
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:id="@+id/btnMedium"
+        android:background="@drawable/capsule_button_blue"
+        android:text="Medium"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        android:textSize="30sp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:id="@+id/btnHard"
+        android:text="Hard"
+        android:textAllCaps="false"
+        android:textColor="@color/black"
+        android:background="@drawable/capsule_button_red"
+        android:layout_marginTop="15dp"
+        />
+    </LinearLayout>
+
+</LinearLayout>

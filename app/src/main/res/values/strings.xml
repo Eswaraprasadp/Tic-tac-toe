@@ -1,8 +1,21 @@
 <resources>
     <string name="app_name">Tic Tac Toe 2.0</string>
+    <string name="tic_tac_toe">Tic-Tac-Toe</string>
     <string name="reset">Reset</string>
     <string name="play_again">Play Again</string>
+    <string name="play">Play!</string>
     <string name="win">You Won!</string>
     <string name="lost">You Lost!</string>
     <string name="draw">Draw!</string>
+    <string name="view_history">View History</string>
+    <string name="time">Time:\u0020 </string>
+    <string name="date">Date:\u0020 </string>
+    <string name="moves">Moves:\u0020 </string>
+    <string name="result">Result:\u0020 </string>
+    <string name="difficulty">Difficulty:\u0020 </string>
+    <string name="best_time">Best Time:\u0020 </string>
+    <string name="select_difficulty">Select Difficulty:</string>
+    <string name="nothing_display">Nothing to display</string>
+    <string name="sec">\u0020sec</string>
+    <string name="na">NA</string>
 </resources>

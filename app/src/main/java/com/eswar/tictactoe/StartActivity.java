@@ -7,48 +7,43 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
-public class StartActivity extends AppCompatActivity {
-
-    private Button easy, medium, hard;
-    private int difficulty;
-    private Intent intent;
-    private final static int AI_LOST = -1, DRAW = 1, AI_WIN = 2, NO_RESULT = 0;
-
+public class StartActivity extends BaseActivity {
+    private Button play, history;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        easy = (Button)findViewById(R.id.btnEasy);
-        medium = (Button)findViewById(R.id.btnMedium);
-        hard = (Button)findViewById(R.id.btnHard);
+        play = (Button)findViewById(R.id.btnPlay);
+        history = (Button)findViewById(R.id.btnViewHistory);
 
-        if(new AI(new int[][]{{0,0,0}, {0,0,0}, {0,0,0}}, 2).findResult(new int[][]{{1, 5, 1}, {1, 5, 5}, {5, 1, 5}}) != DRAW){
-            Log.d("tag", "BUG in findResult!!!");
+        if(sharedPref.getBoolean("firstTime", true)){
+            myDbh.deleteTable();
+            sharedPref.edit().clear().apply();
+
+            sharedPref.edit().putBoolean("firstTime", false).apply();
         }
 
-        easy.setOnClickListener(click);
-        medium.setOnClickListener(click);
-        hard.setOnClickListener(click);
+//        Log.d(tag, "Best time to beat: ");
+//        Log.d(tag, "Easy: " + myDbh.getBestTimeWin(AI.EASY));
+//        Log.d(tag, "Medium: " + myDbh.getBestTimeWin(AI.MEDIUM));
+//        Log.d(tag, "Hard: " + myDbh.getBestTimeWin(AI.DIFFICULT));
 
-        intent = new Intent(StartActivity.this, MainActivity.class);
-    }
-    View.OnClickListener click = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()){
-                case R.id.btnEasy:
-                    difficulty = 0;
-                    break;
-                case R.id.btnMedium:
-                    difficulty = 1;
-                    break;
-                case R.id.btnHard:
-                    difficulty = 2;
-                    break;
+        play.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(StartActivity.this, LevelActivity.class);
+                startActivity(intent);
             }
-            intent.putExtra("Difficulty", difficulty);
-            startActivity(intent);
-        }
-    };
+        });
+
+        history.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(StartActivity.this, LevelHistory.class);
+                startActivity(intent);
+            }
+        });
+    }
+
 }
